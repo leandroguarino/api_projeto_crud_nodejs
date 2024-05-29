@@ -19,6 +19,30 @@ app.post("/cadastrar", (request, response) => {
     response.json({ success: true  })
 })
 
+app.delete("/excluir/:cpf", (request, response) => {
+  let cpf = request.params.cpf
+  for(let i=0; i < clientes.length; i++){
+    let cliente = clientes[i]
+    if (cliente.cpf == cpf){
+        //remove o elemento encontrado na posição "i"
+        clientes.splice(i, 1) 
+    }
+  }
+  response.json({ success: true })
+})
+
+app.put("/alterar", (request, response) => {
+  let cliente = request.body
+  //procura o cliente que tem o CPF enviado
+  for(let i=0; i < clientes.length; i++){
+    if (clientes[i].cpf == cliente.cpf){
+      //substitui os dados do cliente pelos dados enviados pelo front
+      clientes[i] = cliente 
+    }
+  }
+  response.json({ success: true })
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
