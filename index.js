@@ -5,17 +5,33 @@ const cors = require('cors')
 app.use(cors())
 app.use(express.json())
 
+const redis = require('redis')
+const redisClient = redis.createClient({
+  url: 'redis://default:FKlJHdPumpEa858L0ACF8GBL41dmAQMv@redis-10302.c308.sa-east-1-1.ec2.redns.redis-cloud.com:10302'
+});
+
+redisClient.on("error", () => {
+  console.log("Erro ao conectar ao BD")
+})
+redisClient.connect()
+
 //banco de dados em memória
 var clientes = []
 
 app.get('/listar', (request, response) => {
-  response.json(clientes)
+  let lista = redisClient.get("clientes-leandro")
+  .then((clientes) => {
+    response.json(JSON.parse(clientes))
+  }).catch(() => {
+    response.json([])
+  })  
 })
 
 app.post("/cadastrar", (request, response) => {
     let cliente = request.body
     console.log(cliente)
     clientes.push(cliente) //adiciona o cliente no BD
+    redisClient.set("clientes-leandro",JSON.stringify(clientes))
     response.json({ success: true  })
 })
 
