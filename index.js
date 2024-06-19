@@ -44,6 +44,7 @@ app.delete("/excluir/:cpf", (request, response) => {
         clientes.splice(i, 1) 
     }
   }
+  redisClient.set("clientes-leandro",JSON.stringify(clientes))
   response.json({ success: true })
 })
 
@@ -56,6 +57,7 @@ app.put("/alterar", (request, response) => {
       clientes[i] = cliente 
     }
   }
+  redisClient.set("clientes-leandro",JSON.stringify(clientes))
   response.json({ success: true })
 })
 
